@@ -25,7 +25,7 @@ class InfoDisplay:
         return "█" * bar_progress + "-" * (length - bar_progress)
 
     def bytes_to_num(self, n_byte):
-        symbols = ("B", "KB", "GB", "TB")
+        symbols = ("B", "KB", "MB", "GB", "TB")
         step = 1024.0
         i = 0
         while n_byte >= step and i < len(symbols):
@@ -50,7 +50,7 @@ class InfoDisplay:
               f"\n"
               )
 
-        for i, core in enumerate(cpu_info.cpu_info['cpu_core_usage']):
+        for i, core in enumerate(cpu_info['cpu_core_usage']):
             print(f"...Core {i + 1:02}: {core:05} % | {display_bar(core)}  |")
 
     def memory_display(self, memory_info):
@@ -72,6 +72,13 @@ class InfoDisplay:
               f"\nEspaço Usado: {self.bytes_to_num(disk_info['disk_used'])}"
               f"\nEspaço Livre: {self.bytes_to_num(disk_info['disk_free'])}")
 
+
+    def internet_display(self, internet_info):
+        print("\n// === Internet ===//")
+
+        print(f"Bytes enviados: {self.bytes_to_num(internet_info["internet_rate"]["upload_rate"])}")
+        print(f"Bytes recebidos: {self.bytes_to_num(internet_info["internet_rate"]["download_rate"])}")
+
     def display(self, interval=1):
         try:
             while True:
@@ -80,6 +87,7 @@ class InfoDisplay:
                 self.cpu_display(self.info.cpu_info)
                 self.memory_display(self.info.memory_info)
                 self.disk_display(self.info.disk_info)
+                self.internet_display(self.info.internet_info)
                 time.sleep(interval)
         except KeyboardInterrupt:
             print('\nExit')

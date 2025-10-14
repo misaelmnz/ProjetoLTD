@@ -1,3 +1,6 @@
+import time
+from enum import nonmember
+
 import psutil
 
 class PcInfo:
@@ -39,11 +42,38 @@ class PcInfo:
         return self.disk_info
 
     def collect_internet_info(self):
+
         self.internet_info = {
-            "internet_bytes_sent": psutil.net_io_counters().bytes_sent,
-            "internet_bytes_received": psutil.net_io_counters().bytes_recv,
+            "last_byte_sent": None,
+            "last_byte_received": None,
+            "last_time": None,
+            "internet_rate": {
+                "upload_rate": 0,
+                "download_rate": 0
+            }
         }
-        return self.internet_info
+
+        net = psutil.net_io_counters()
+        now = time.time()
+        bytes_sent = net.bytes_sent
+        bytes_recv = net.bytes_recv
+
+        if self.internet_info["last_byte_sent"] is not None and self.internet_info["last_byte_received"] is not None:
+            interval = now - self.internet_info["last_time"]
+            upload_rate = (bytes_sent - self.internet_info["last_byte_sent"]) / interval
+            download_rate = (bytes_recv - self.internet_info["last_byte_received"]) / interval
+            self.internet_info["internet_rate"]["upload_rate"] = upload_rate
+            self.internet_info["internet_rate"]["download_rate"] = download_rate
+        else:
+            self.internet_info["internet_rate"]["upload_rate"] = 0
+            self.internet_info["internet_rate"]["download_rate"] = 0
+
+        self.internet_info["last_byte_sent"] = bytes_sent
+        self.internet_info["last_byte_received"] = bytes_recv
+        self.internet_info["last_time"] = now
+
+        return self.internet_info["internet_rate"]
+
 
     def collector(self):
         self.collect_cpu_info()
