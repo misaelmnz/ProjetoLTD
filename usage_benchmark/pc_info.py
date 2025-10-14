@@ -1,4 +1,4 @@
-import os, psutil
+import psutil
 
 class PcInfo:
     def __new__(cls, *args, **kwargs):

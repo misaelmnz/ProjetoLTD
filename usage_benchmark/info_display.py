@@ -1,5 +1,3 @@
-import psutil
-
 from pc_info import PcInfo
 import time
 import os
