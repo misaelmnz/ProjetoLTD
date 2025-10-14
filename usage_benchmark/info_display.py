@@ -72,7 +72,6 @@ class InfoDisplay:
               f"\nEspaço Usado: {self.bytes_to_num(disk_info['disk_used'])}"
               f"\nEspaço Livre: {self.bytes_to_num(disk_info['disk_free'])}")
 
-
     def internet_display(self, internet_info):
         print("\n// === Internet ===//")
 

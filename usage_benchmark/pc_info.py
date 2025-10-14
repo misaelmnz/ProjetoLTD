@@ -43,15 +43,16 @@ class PcInfo:
 
     def collect_internet_info(self):
 
-        self.internet_info = {
-            "last_byte_sent": None,
-            "last_byte_received": None,
-            "last_time": None,
-            "internet_rate": {
-                "upload_rate": 0,
-                "download_rate": 0
+        if not self.internet_info:
+            self.internet_info = {
+                "last_byte_sent": None,
+                "last_byte_received": None,
+                "last_time": None,
+                "internet_rate": {
+                    "upload_rate": 0,
+                    "download_rate": 0
+                }
             }
-        }
 
         net = psutil.net_io_counters()
         now = time.time()
@@ -60,10 +61,11 @@ class PcInfo:
 
         if self.internet_info["last_byte_sent"] is not None and self.internet_info["last_byte_received"] is not None:
             interval = now - self.internet_info["last_time"]
-            upload_rate = (bytes_sent - self.internet_info["last_byte_sent"]) / interval
-            download_rate = (bytes_recv - self.internet_info["last_byte_received"]) / interval
-            self.internet_info["internet_rate"]["upload_rate"] = upload_rate
-            self.internet_info["internet_rate"]["download_rate"] = download_rate
+            if interval > 0:
+                upload_rate = (bytes_sent - self.internet_info["last_byte_sent"]) / interval
+                download_rate = (bytes_recv - self.internet_info["last_byte_received"]) / interval
+                self.internet_info["internet_rate"]["upload_rate"] = upload_rate
+                self.internet_info["internet_rate"]["download_rate"] = download_rate
         else:
             self.internet_info["internet_rate"]["upload_rate"] = 0
             self.internet_info["internet_rate"]["download_rate"] = 0
