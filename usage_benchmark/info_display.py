@@ -2,7 +2,6 @@ from pc_info import PcInfo
 import time
 import os
 
-
 class InfoDisplay:
     def __init__(self):
         self.info = PcInfo()
@@ -62,7 +61,7 @@ class InfoDisplay:
 
                 print(f"\n// === Disco Rígido ===//")
 
-                print(f"\nUtilização Total do Disco: \n{display_values.memory_info['ram_percent']:.2f} %"
+                print(f"\nUtilização Total do Disco: \n{display_values.disk_info['disk_percent']:.2f} %"
                       f" | {self.display_bar(display_values.disk_info['disk_percent'])} |\n"
                       f"\nEspaço Total: {display_values.disk_info['disk_total'] / disk_size_div:.2f} GB"
                       f"\nEspaço Usado: {display_values.disk_info['disk_used'] / disk_size_div:.2f} GB"
