@@ -9,9 +9,10 @@ BACKUP_FILE = Path.home() / "startup_backup.json"
 BACKUP_DIR = Path.home() / "startup_backups"
 BACKUP_DIR.mkdir(exist_ok=True)
 
-# ---------------------------
-# Funções de utilidade
-# ---------------------------
+
+def limpar_tela():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 
 def listar_registro(chave_base, sub_chave):
     programas = {}
@@ -52,10 +53,6 @@ def listar_tudo():
     programas.update(listar_pastas_startup())
     return programas
 
-
-# ---------------------------
-# Backup e remoção
-# ---------------------------
 
 def salvar_backup(nome, meta):
     if BACKUP_FILE.exists():
@@ -99,12 +96,7 @@ def desabilitar_programa(programas, indice):
             print(f"[ERRO] Falha ao mover {nome}: {e}")
 
 
-# ---------------------------
-# Habilitar programas
-# ---------------------------
-
 def habilitar_programa():
-    """Restaura backups OU adiciona novo programa à inicialização"""
     print("\n=== HABILITAR PROGRAMA NA INICIALIZAÇÃO ===")
     print("1. Restaurar de backup existente")
     print("2. Adicionar novo programa instalado")
@@ -112,7 +104,6 @@ def habilitar_programa():
 
     escolha = input("\nEscolha uma opção: ").strip()
 
-    # Restaurar backup existente
     if escolha == "1":
         if not BACKUP_FILE.exists():
             print("[INFO] Nenhum backup encontrado.")
@@ -157,7 +148,6 @@ def habilitar_programa():
 
         BACKUP_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    # Adicionar novo programa instalado
     elif escolha == "2":
         caminho_programa = ""
         nome_programa = ""
@@ -240,9 +230,6 @@ def habilitar_programa():
         except PermissionError:
             print("[ERRO] Execute como administrador.")
 
-# ---------------------------
-# Atrasar inicialização
-# ---------------------------
 
 def atrasar_programa(programas, indice, segundos=30):
     """Cria uma tarefa agendada para iniciar o programa com atraso"""
@@ -266,11 +253,12 @@ def atrasar_programa(programas, indice, segundos=30):
         print(f"[ERRO] Falha ao criar tarefa agendada para {nome}. Requer modo administrador.")
 
 if __name__ == "__main__":
-    print("=== GERENCIADOR DE PROGRAMAS NA INICIALIZAÇÃO ===")
 
     while True:
+        limpar_tela()
+        print("=== GERENCIADOR DE PROGRAMAS NA INICIALIZAÇÃO ===")
         programas = listar_tudo()
-        print("\nProgramas configurados para iniciar com o Windows:")
+        print("\nProgramas configurados para iniciar com o Windows:\n")
         if not programas:
             print("  [Nenhum programa encontrado]")
         else:
